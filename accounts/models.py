@@ -4,7 +4,7 @@ from .managers import *
 
 class CustomUser(AbstractUser):
     email = models.CharField(max_length=200, unique=True)
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, null=True, blank=True)
     TYPE_CAST = (
     ("admin", "admin"),
     ("user", "user"),

@@ -8,6 +8,9 @@ class Channel(models.Model):
     image = models.ImageField(null=True, blank=True)
     created_at = models.DateField(auto_now=True)
 
+    def __str__(self):
+        return self.title
+
 
 
 class Post(models.Model):
@@ -17,6 +20,9 @@ class Post(models.Model):
     image = models.ImageField(null=True, blank=True)
     video = models.FileField(null=True, blank=True)
     created_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.content
 
 
 class Video(models.Model):
@@ -29,23 +35,38 @@ class Video(models.Model):
     views_count = models.IntegerField(null=True, blank=True)
     is_public = models.BooleanField()
 
+    def __str__(self):
+        return self.title
+
 
 
 class Comments(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField()
     created_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 
 class Likes_Dislikes(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE,null=True, blank=True )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, null=True, blank=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+
     TYPES = (
         ('like', 'like'),
         ('dislike', 'dislike')
     )
     type =  models.CharField(max_length=8, choices=TYPES)
+    class Meta:
+        constraints = [
+        models.UniqueConstraint(fields=['user', 'video'], name='unique_user_video'),
+        models.UniqueConstraint(fields=['user', 'post'], name='unique_user_post'),
+        ]
+
+    def __str__(self):
+        return self.type
