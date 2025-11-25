@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Upload Video{% endblock title %}
+
+{% block main %}
+<style>
+    .upload-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background-color: #181818;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    .upload-container h1 {
+        color: #fff;
+        font-size: 22px;
+        margin-bottom: 20px;
+        text-align: center;
+        animation: fadeIn 1s ease forwards;
+    }
+
+    .error {
+        color: #ff4d4f;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+        animation: fadeIn 1s ease forwards;
+    }
+
+    form label {
+        display: block;
+        color: #ccc;
+        font-weight: 600;
+        margin-bottom: 5px;
+        margin-top: 10px;
+    }
+
+    form input[type="text"],
+    form textarea,
+    form input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 8px;
+        background-color: #282828;
+        color: #fff;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        animation: fadeIn 1.2s ease forwards;
+    }
+
+    form input[type="text"]:focus,
+    form textarea:focus,
+    form input[type="file"]:focus {
+        border-color: #ff0000;
+        box-shadow: 0 0 8px rgba(255,0,0,0.5);
+        outline: none;
+        transform: scale(1.02);
+    }
+
+    form textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .btn-upload {
+        width: 100%;
+        padding: 12px;
+        background-color: #ff0000;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        animation: fadeIn 1.4s ease forwards;
+    }
+
+    .btn-upload:hover {
+        background-color: #e60000;
+        transform: scale(1.03);
+    }
+
+    /* Keyframes */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    
+</style>
+
+<div class="upload-container">
+    <h1>Upload Your Video</h1>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" placeholder="Video title" value="{{ title|default:'' }}" required>
+
+        <label for="description">Description</label>
+        <textarea name="description" id="description" placeholder="Video description" required>{{ description|default:'' }}</textarea>
+
+        <label for="video_file">Select Video</label>
+        <input type="file" name="video_file" id="video_file" accept="video/*" required>
+
+        <label class="checkbox-label">
+            <input type="checkbox" name="is_public" {% if is_public %}checked{% endif %}> Public
+        </label>
+
+        <button type="submit" class="btn-upload">Upload</button>
+
+       
+    </form>
+</div>
+{% endblock main %}

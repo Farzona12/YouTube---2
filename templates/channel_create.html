@@ -1,0 +1,117 @@
+
+{% extends 'base.html' %}
+{% block title  %}Create Channel{% endblock title %}
+{% block main %}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #181818;  
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: #202020;  
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        input[type="text"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #303030;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        input[type="text"]::placeholder,
+        textarea::placeholder {
+            color: #b0b0b0;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #FF0000;  
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #cc0000;
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+         .icon {
+            margin-right: 8px;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+
+
+<div class="container">
+    <h1>➕ Create New Channel</h1>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if error_channel %}
+        <p class="error">{{ error_channel }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title">Channel Title <span class="icon">📺</span></label>
+        <input type="text" name="title" id="title" placeholder="Enter channel title" value="{{ title|default:'' }}" required>
+
+        <label for="description">Description <span class="icon">📝</span></label>
+        <textarea name="description" id="description" rows="4" placeholder="Describe your channel">{{ description|default:'' }}</textarea>
+
+        <label for="image">Channel Image <span class="icon">🖼️</span></label>
+        <input type="file" name="image" id="image">
+
+        <button type="submit">Create Channel</button>
+    </form>
+
+    <p class="note">All fields are required except image.</p>
+</div>
+
+{% endblock main %}

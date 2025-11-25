@@ -1,0 +1,358 @@
+
+{% extends 'base.html' %}
+{% block title  %}Update Channel — {{ channel.title }}{% endblock title %}
+{% block main %}
+
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --panel: #161616;
+            --muted: #9aa0a6;
+            --text: #ffffff;
+            --card: #1d1d1d;
+            --accent: #ff0000;
+            /* youtube red */
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(180deg, #0b0b0b 0, #121212 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* top bar (YouTube-like) */
+        .topbar {
+            height: 64px;
+            background: var(--panel);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo .mark {
+            width: 36px;
+            height: 24px;
+            border-radius: 4px;
+            background: var(--text);
+            display: inline-block;
+            position: relative;
+        }
+
+        .logo .mark::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 4px;
+            width: 18px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+
+        .logo span {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.2px
+        }
+
+        .top-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .profile-pill {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .profile-pill img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover
+        }
+
+        /* page container */
+        .wrap {
+            max-width: 1000px;
+            margin: 28px auto;
+            padding: 0 20px
+        }
+
+        .header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .thumb {
+            width: 140px;
+            height: 100px;
+            border-radius: 10px;
+            background: #232323;
+            overflow: hidden;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        .meta {
+            flex: 1
+        }
+
+        .meta h1 {
+            margin: 0;
+            font-size: 22px
+        }
+
+        .meta p {
+            margin: 8px 0;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        /* form card */
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        form .field {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #e6e6e6
+        }
+
+        input[type="text"],
+        textarea {
+            background: #121212;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px
+        }
+
+        .row {
+            display: flex;
+            gap: 12px
+        }
+
+        .col {
+            flex: 1
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 0;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-save {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(255, 0, 0, 0.10)
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text)
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 10px
+        }
+
+        /* responsive */
+        @media (max-width:720px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start
+            }
+
+            .thumb {
+                width: 100%;
+                height: 160px;
+                border-radius: 8px
+            }
+
+            .meta h1 {
+                font-size: 20px
+            }
+        }
+
+        .yt-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .yt-icon {
+            width: 36px;
+            height: 26px;
+            background: #FF0000;
+            /* YouTube red */
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .yt-play {
+            width: 0;
+            height: 0;
+            border-left: 11px solid white;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            margin-left: 3px;
+        }
+
+        .yt-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+    </style>
+
+
+
+    <main class="wrap">
+
+
+
+        {% if ch %}
+        <div class="header">
+            {% if ch.image %}
+            <img src="{{ ch.image.url }}" alt="thumb" class="thumb">
+            {% else %}
+            <div class="thumb"></div>
+            {% endif %}
+
+            <div class="meta">
+                <h1>Edit channel — {{ ch.title }}</h1>
+                <p>{{ ch.description|default:"No description yet" }}</p>
+                <div class="note">Subscribers: {{ ch.subscribers.count }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="field">
+                    <label for="title">Channel title</label>
+                    <input id="title" name="title" type="text" value="{{ ch.title }}" placeholder="Channel title"
+                        required>
+                </div>
+
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"
+                        placeholder="Tell what your channel is about">{{ ch.description }}</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col field">
+                        <label for="image">Channel image</label>
+                        <input id="image" name="image" type="file" accept="image/*">
+                        <div class="small">Upload a square image (recommended 800×800). Current image is shown above.
+                        </div>
+                    </div>
+
+                    <div class="col field">
+                        <label>Channel owner</label>
+                        <input type="text" value="{{ ch.owner.username }}" readonly>
+                        <div class="small">Owner cannot be changed here.</div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-save">Save changes</button>
+                    <a href="{% url 'channel_list' request.user.id %}" class="btn btn-cancel">Cancel</a>
+                </div>
+
+            </form>
+            <p class="note">Changes will be visible immediately after saving.</p>
+        </div>
+
+        {% else %}
+        <div class="card">
+            <h2>No channel found</h2>
+            <p class="small">You don’t have a channel yet. <a href="{% url 'channel_create' %}">Create one</a>.</p>
+        </div>
+        {% endif %}
+
+    </main>
+{% endblock main %}

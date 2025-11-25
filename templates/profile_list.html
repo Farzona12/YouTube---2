@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Profiles</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 26px rgba(0,0,0,0.12);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 180px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .name {
+            margin: 12px 0 6px 0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .bio {
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+            min-height: 40px;
+        }
+
+        .age {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .edit {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .delete-form button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 10px;
+            background: #ef4444;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Profiles</h1>
+
+    {% if profile %}
+    <div class="grid">
+        
+        {% for p in profile %}
+        <div class="card">
+
+            {% if p.image %}
+                <img src="{{ p.image.url }}" class="avatar">
+            {% else %}
+                <div class="avatar"></div>
+            {% endif %}
+
+            <div class="name">
+                {{ p.user.username }}
+            </div>
+
+            <p class="bio">{{ p.bio|default:"No bio" }}</p>
+            <p class="age">Age: {{ p.age }}</p>
+
+            <div class="actions">
+                {% if p.user == request.user %}
+                    <a class="btn edit" href="{% url 'profile_update' p.id %}">Edit</a>
+
+                    <form method="POST" 
+                          action="{% url 'profile_delete' p.id %}" 
+                          class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+        <h2 style="text-align:center;">No profiles found</h2>
+    {% endif %}
+
+</div>
+</body>
+</html>

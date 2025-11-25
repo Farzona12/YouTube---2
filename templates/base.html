@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}YouTube{% endblock %}</title>
+
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(15, 15, 15, 0.9);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .con {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+        }
+
+        .btn-auth {
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 2px solid #fff;
+            color: #fff;
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .btn-auth:hover {
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Keyframes для плавного появления */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="con">
+            <img src="{% static 'imgs/YouTube.png' %}" width="100px">
+        </div>
+
+        <div class="auth-buttons">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'logout' %}"><button class="btn-auth">Logout</button></a>
+            {% else %}
+            <a href="{% url 'login' %}"><button class="btn-auth">Login</button></a>
+            <a href="{% url 'register' %}"><button class="btn-auth">Register</button></a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% block main %}
+        {% endblock main %}
+    </main>
+
+</body>
+
+</html>

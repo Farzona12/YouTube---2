@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}My Channels{% endblock title %}
+
+{% block main %}
+
+<style>
+/* Общий фон и шрифты */
+body {
+    background: #0f0f0f;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.page-container {
+    margin: 30px;
+    padding: 20px;
+    min-height: 80vh;
+}
+
+/* Заголовок */
+h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    animation: fadeDown 0.8s ease;
+    color: #fff;
+}
+
+/* Карта канала */
+.channel-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideUp 1s ease forwards;
+}
+
+/* Анимация задержки для каждого */
+.channel-row:nth-child(1) { animation-delay: 0.1s; }
+.channel-row:nth-child(2) { animation-delay: 0.3s; }
+.channel-row:nth-child(3) { animation-delay: 0.5s; }
+.channel-row:nth-child(4) { animation-delay: 0.7s; }
+.channel-row:nth-child(5) { animation-delay: 0.9s; }
+
+/* Картинка канала */
+.channel-left {
+    width: 150px;
+    flex-shrink: 0;
+}
+
+.channel-left img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Если картинки нет, первая буква */
+.channel-left .placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #2b2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: #fff;
+}
+
+/* Текстовая часть */
+.channel-right h3 {
+    font-size: 24px;
+    margin: 0 0 8px;
+}
+
+.channel-right p {
+    margin: 4px 0;
+    font-size: 16px;
+    color: #bbb;
+}
+
+/* Кнопка More About */
+.more-btn {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 8px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-color: #cf2222;
+}
+
+.more-btn:hover {
+    transform: scale(1.05);
+    text-shadow: 2px 2px 6px rgba(255,255,255,0.7);
+}
+
+.more-btn:active {
+    transform: scale(0.98);
+}
+
+/* Анимации */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<div class="page-container">
+    <h2>Your Channels</h2>
+
+    <div class="channels-list">
+        {% for channel in channels %}
+        <div class="channel-row" style="margin-left: 150px;">
+
+            <!-- Image -->
+            <div class="channel-left">
+                {% if channel.image %}
+                <img src="{{ channel.image.url }}" alt="{{ channel.title }}">
+                {% else %}
+                <div class="placeholder">{{ channel.title|slice:":1" }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Info -->
+            <div class="channel-right " style="margin-left: 120px;">
+                <h3>{{ channel.title }}</h3>
+                <p>{{ channel.owner.email }} • {{ channel.subscribers.count }} subscribers</p>
+                <p>{{ channel.description }}</p>
+                <a href="{% url 'channel_detail' channel.id %}" class="more-btn">More About →</a>
+            </div>
+
+        </div>
+        {% empty %}
+        <p>You have no channels yet. <a href="{% url 'channel_create' %}" style="color:#0af;">Create a new channel</a></p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock main %}

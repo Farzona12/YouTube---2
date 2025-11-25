@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Delete Channel{% endblock title %}
+
+{% block main %}
+<div style="display:flex;justify-content:center;align-items:center;height:80vh;">
+    <div class="delete-container" style="
+        background-color:#202020;
+        padding:30px;
+        border-radius:12px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.5);
+        text-align:center;
+        width:350px;
+    ">
+        <h2 style="margin-bottom:20px;font-size:20px;">Do you really want to delete this channel?</h2>
+        <div class="channel-name" style="font-weight:bold;margin-bottom:20px;">
+            Your channel: {{ channel.title }}
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="answer" value="delete" style="
+                padding:10px 20px;
+                border-radius:8px;
+                font-weight:bold;
+                border:none;
+                cursor:pointer;
+                font-size:14px;
+                margin:5px;
+                background-color:#ff0000;
+                color:#fff;
+                transition:all 0.2s ease;
+            ">Delete</button>
+            <button type="submit" name="answer" value="cancel" style="
+                padding:10px 20px;
+                border-radius:8px;
+                font-weight:bold;
+                border:none;
+                cursor:pointer;
+                font-size:14px;
+                margin:5px;
+                background-color:#3c3c3c;
+                color:#fff;
+                transition:all 0.2s ease;
+            ">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endblock main %}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            width: 350px;
+            position: relative;
+        }
+
+        .card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .question {
+            font-weight: bold;
+            color: #d9534f;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn-delete {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #5bc0de;
+            color: white;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto; 
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    {% if profile.image %}
+        <img src="{{ profile.image.url }}" alt="Profile Image">
+    {% endif %}
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    <p><strong>Age:</strong> {{ profile.age }}</p>
+    <p class="question">Do you really want to delete this profile?</p>
+
+    <button class="btn btn-delete" id="openModal">Delete</button>
+    <a href="{% url 'profile_list' %}" class="btn btn-cancel">Cancel</a>
+</div>
+
+<!-- Модальное окно -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <p>Are you sure you want to permanently delete this profile?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="confirm" value="delete" class="btn btn-delete">Yes, Delete</button>
+        <button type="submit" name="confirm" value="cancel" class="btn btn-cancel">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<script>
+    const modal = document.getElementById("myModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtn = document.getElementById("closeModal");
+
+    openBtn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -2,20 +2,21 @@ from django.db import models
 from accounts.models import CustomUser
 
 class Channel(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    title = models.CharField(max_length=300)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='channels')
+    title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     created_at = models.DateField(auto_now=True)
-
+    subscribers = models.ManyToManyField(CustomUser, related_name='subscriptions',blank=True)
 
 
 class Post(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     video = models.FileField(null=True, blank=True)
+    views_count = models.IntegerField(null=True, blank=True)
     created_at = models.DateField(auto_now=True)
 
 
